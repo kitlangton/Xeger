@@ -9,12 +9,20 @@ module Xeger
     }
 
     NUMBER_KEYS = {
-      all_digits: '\d+'
+      all_digits: '\d+',
     }
 
     EDGE_KEYS = {
-      hyphenated_word: '\w+-\w+'
+      hyphenated_word: '\w+-\w+',
     }
+
+    def for_string(string)
+      final_regex = []
+      string.split.each do |word|
+        final_regex << for_word(word)
+      end
+      final_regex.join(" +")
+    end
 
     def for_word(word)
       @string = word
@@ -22,10 +30,14 @@ module Xeger
       final_regex << handle_words
       final_regex << handle_numbers
       final_regex << handle_edges
-      /#{final_regex}/
+      if final_regex == "" && word =~ /\w+/
+        return /\w+/
+      end
+      final_regex
     end
 
     private
+
 
     def handle_numbers
       test_keys NUMBER_KEYS
